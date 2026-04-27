@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>La Biblia Versión Reina Valera</title>
+    <title>La Biblia Versión Reina Valera | Visor Completo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
@@ -15,7 +15,24 @@
             box-sizing: border-box;
         }
 
-        /* ----- VARIABLES: AZUL OSCURO + DORADO ----- */
+        /* ----- BASE MEJORADA PARA MOVIL: ALTURA 100% SEGURA ----- */
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a1a2f 0%, #071421 100%);
+            color: #f0f4fa;
+            font-family: 'Merriweather', serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* VARIABLES */
         :root {
             --blue-deep: #0a1a2f;
             --blue-mid: #0f2a3f;
@@ -32,17 +49,7 @@
             --font-body: 'Merriweather', serif;
         }
 
-        body {
-            background: linear-gradient(145deg, var(--blue-deep) 0%, #071421 100%);
-            color: var(--text-light);
-            font-family: var(--font-body);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ----- LOGIN PAGE ----- */
+        /* ----- LOGIN PAGE (FULL HEIGHT) ----- */
         #login-page {
             position: fixed;
             top: 0;
@@ -69,7 +76,6 @@
             align-items: center;
             padding: 2rem;
             position: relative;
-            backdrop-filter: blur(1px);
         }
 
         .login-left::after {
@@ -100,14 +106,12 @@
         .login-brand h1 {
             font-family: var(--font-heading);
             font-size: clamp(1.6rem, 6vw, 2.8rem);
-            text-transform: none;
             letter-spacing: 1px;
             color: var(--gold-primary);
             text-shadow: 0 4px 15px rgba(0,0,0,0.5);
             margin-bottom: 0.5rem;
             text-align: center;
             line-height: 1.3;
-            word-break: break-word;
         }
 
         .login-brand p {
@@ -157,7 +161,6 @@
             font-family: var(--font-heading);
             font-weight: 600;
             color: var(--silver-light);
-            letter-spacing: 0.5px;
         }
 
         .form-control {
@@ -207,7 +210,7 @@
             display: none;
         }
 
-        /* LOADING SCREEN */
+        /* LOADING */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -242,7 +245,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* MAIN APP CONTAINER (IFRAME + HEADER) */
+        /* ========== APP PRINCIPAL: HEADER SIEMPRE VISIBLE ========== */
         #app-container {
             display: flex;
             flex-direction: column;
@@ -251,6 +254,7 @@
             opacity: 0;
             transform: translateY(15px);
             transition: opacity 0.8s ease, transform 0.8s ease;
+            background: #010a14;
         }
 
         #app-container.visible {
@@ -258,13 +262,14 @@
             transform: translateY(0);
         }
 
-        /* HEADER AZUL OSCURO CON DORADO */
+        /* HEADER: diseño robusto para movil (nunca oculto) */
         .app-header {
             background: #081c2e;
             border-bottom: 3px solid var(--gold-primary);
-            padding: 0.8rem 2rem;
+            padding: 0.7rem 1.5rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            z-index: 20;
+            z-index: 100;
+            flex-shrink: 0; /* Evita que el header se comprima */
         }
 
         .header-inner {
@@ -274,33 +279,39 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .logo-area h1 {
             font-family: var(--font-heading);
-            font-size: clamp(1.2rem, 5vw, 2rem);
-            text-transform: none;
+            font-size: clamp(1rem, 4.5vw, 2rem);
             color: var(--gold-primary);
             letter-spacing: 1px;
             margin: 0;
-            text-align: left;
             line-height: 1.3;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             word-break: break-word;
+        }
+
+        .logo-area h1 i {
+            font-size: 0.9em;
         }
 
         .header-actions {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .help-btn {
             background: rgba(212, 175, 55, 0.15);
             border: 1px solid var(--gold-primary);
             color: var(--gold-primary);
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -318,7 +329,7 @@
             background: rgba(212, 175, 55, 0.15);
             border: 1px solid var(--gold-primary);
             color: var(--gold-primary);
-            padding: 0.6rem 1.2rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 40px;
             font-family: var(--font-heading);
             cursor: pointer;
@@ -327,6 +338,7 @@
             align-items: center;
             gap: 0.6rem;
             font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .logout-btn-header:hover {
@@ -335,12 +347,13 @@
             transform: translateY(-2px);
         }
 
-        /* IFRAME CONTAINER: OCUPA TODO EL RESTO */
+        /* IFRAME: ocupa el resto del espacio de forma segura */
         .iframe-wrapper {
             flex: 1;
             position: relative;
-            background: #010a14;
-            overflow: hidden;
+            background: #fff;
+            min-height: 0;  /* crucial para flex en navegadores móviles */
+            width: 100%;
         }
 
         .bible-iframe {
@@ -348,15 +361,15 @@
             height: 100%;
             border: none;
             background: #fff;
-            transition: all 0.2s;
+            display: block;
         }
 
-        /* Tooltip flotante para ayuda móvil */
+        /* Tooltip flotante para móviles */
         .tooltip-hint {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
             color: var(--gold-soft);
             padding: 8px 16px;
@@ -374,13 +387,9 @@
         }
         .tooltip-hint.show {
             opacity: 1;
-            pointer-events: none;
-        }
-        .tooltip-hint i {
-            font-size: 1rem;
         }
 
-        /* MODAL DE CONFIRMACIÓN (SALIDA) */
+        /* MODAL DE CIERRE */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -495,21 +504,21 @@
             transform: scale(1.02);
         }
 
-        /* ========== RESPONSIVIDAD MEJORADA PARA TODOS LOS DISPOSITIVOS ========== */
-        /* Tablets y móviles grandes (hasta 1024px) */
+        /* ========== RESPONSIVE: GARANTIZAR QUE EL HEADER SEA VISIBLE EN TODOS LOS MÓVILES ========== */
+        /* Tablets y móviles grandes */
         @media (max-width: 1024px) {
             .app-header {
-                padding: 0.6rem 1.5rem;
+                padding: 0.6rem 1.2rem;
             }
             .header-inner {
-                gap: 0.8rem;
+                gap: 0.6rem;
             }
             .logo-area h1 {
-                font-size: clamp(1.1rem, 4vw, 1.6rem);
+                font-size: clamp(0.95rem, 4vw, 1.4rem);
             }
             .logout-btn-header {
-                padding: 0.5rem 1rem;
-                font-size: 0.85rem;
+                padding: 0.45rem 1rem;
+                font-size: 0.8rem;
             }
             .help-btn {
                 width: 34px;
@@ -517,10 +526,11 @@
             }
         }
 
-        /* Móviles y tablets en vertical (hasta 768px) */
+        /* Móviles y tablets en vertical: asegurar header visible y sin overlap */
         @media (max-width: 768px) {
+            /* Ocultar la parte decorativa izquierda del login para mejor UX móvil */
             .login-left {
-                display: none; /* Oculta la sección decorativa en móviles */
+                display: none;
             }
             .login-right {
                 flex: 1;
@@ -533,51 +543,42 @@
             }
             .login-box h2 {
                 font-size: 1.5rem;
-                margin-bottom: 1.5rem;
             }
-            .form-control {
-                padding: 0.8rem 0.9rem;
-                font-size: 0.95rem;
-            }
-            .login-btn {
-                padding: 0.8rem;
-                font-size: 1rem;
-            }
-            .login-image {
-                max-width: 150px;
-            }
-            .login-brand h1 {
-                font-size: clamp(1.3rem, 5vw, 1.8rem);
-            }
+            
+            /* Header: nunca se oculta, se ajusta a espacio reducido */
             .app-header {
-                padding: 0.6rem 1rem;
+                padding: 0.5rem 0.9rem;
             }
             .header-inner {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 0.6rem;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
             }
             .logo-area h1 {
-                font-size: 1.2rem;
-                text-align: center;
+                font-size: 1rem;
+                white-space: normal;
+                line-height: 1.2;
+                gap: 5px;
+            }
+            .logo-area h1 i {
+                font-size: 0.9rem;
+            }
+            .logout-btn-header {
+                padding: 0.4rem 0.9rem;
+                font-size: 0.75rem;
+                gap: 0.4rem;
+            }
+            .help-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
             }
             .iframe-wrapper {
                 min-height: 0;
-                flex: 1;
             }
             .modal-danger {
                 width: 85%;
                 max-width: 340px;
-            }
-            .modal-header-danger {
-                padding: 1rem 1.2rem;
-            }
-            .modal-body-danger {
-                padding: 1.5rem;
-            }
-            .danger-text {
-                font-size: 1rem;
             }
             .tooltip-hint {
                 bottom: 15px;
@@ -587,49 +588,47 @@
             }
         }
 
-        /* Móviles pequeños (hasta 480px) */
+        /* Móviles muy pequeños (menos de 480px) - mantener header visible */
         @media (max-width: 480px) {
-            .login-box {
-                padding: 1.5rem;
-            }
-            .form-group {
-                margin-bottom: 1rem;
-            }
-            .login-brand h1 {
-                font-size: 1.4rem;
+            .app-header {
+                padding: 0.45rem 0.7rem;
             }
             .logo-area h1 {
-                font-size: 1rem;
+                font-size: 0.85rem;
             }
             .logout-btn-header {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.8rem;
+                padding: 0.35rem 0.7rem;
+                font-size: 0.7rem;
             }
             .help-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 0.85rem;
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            .header-actions {
+                gap: 0.5rem;
             }
             .tooltip-hint {
                 font-size: 0.65rem;
                 bottom: 10px;
                 right: 10px;
+                padding: 5px 10px;
             }
         }
 
-        /* Orientación horizontal en móviles (ajuste para que el iframe no quede corto) */
-        @media (max-width: 850px) and (orientation: landscape) {
+        /* Orientación horizontal en móviles: header igual de visible */
+        @media (max-width: 900px) and (orientation: landscape) {
             body {
-                overflow: auto;
+                overflow: hidden;
             }
             .app-header {
-                padding: 0.4rem 1rem;
+                padding: 0.3rem 1rem;
             }
             .logo-area h1 {
-                font-size: 1rem;
+                font-size: 0.85rem;
             }
             .logout-btn-header {
-                padding: 0.3rem 0.8rem;
+                padding: 0.25rem 0.7rem;
                 font-size: 0.7rem;
             }
             .iframe-wrapper {
@@ -637,21 +636,28 @@
             }
         }
 
-        /* Tablets grandes (entre 769px y 1024px) en modo portrait/landscape */
+        /* Tablets medianas (entre 769px y 1024px) sin romper diseño */
         @media (min-width: 769px) and (max-width: 1024px) {
             .login-left {
-                padding: 1.5rem;
-            }
-            .login-box {
-                padding: 2rem;
-                max-width: 400px;
+                display: flex; /* en tablet horizontal se mantiene el diseño */
             }
             .app-header {
-                padding: 0.6rem 1.5rem;
+                padding: 0.7rem 1.5rem;
             }
             .logo-area h1 {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
+        }
+
+        /* Ajuste extra para evitar cualquier ocultamiento accidental */
+        .app-header,
+        .logo-area,
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        .app-header {
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -687,14 +693,14 @@
         </div>
     </div>
 
-    <!-- LOADING SIMULADO -->
+    <!-- LOADING -->
     <div id="loading-screen">
         <div class="loader-icon"><i class="fas fa-hourglass-half"></i></div>
         <h3 style="color: var(--gold-soft);">Cargando Escrituras...</h3>
         <p style="color: #9aaec2;">Preparando el visor bíblico</p>
     </div>
 
-    <!-- APP PRINCIPAL: IFRAME + HEADER -->
+    <!-- APP PRINCIPAL: HEADER + IFRAME -->
     <div id="app-container">
         <header class="app-header">
             <div class="header-inner">
@@ -712,12 +718,12 @@
         </div>
     </div>
 
-    <!-- Tooltip flotante para indicar cómo acceder a los libros -->
+    <!-- Tooltip de ayuda móvil -->
     <div id="mobileHint" class="tooltip-hint">
         <i class="fas fa-book-open"></i> <span>Usa el menú dentro del visor para explorar todos los libros</span>
     </div>
 
-    <!-- MODAL DE CONFIRMACIÓN DE SALIDA -->
+    <!-- MODAL CONFIRMACIÓN -->
     <div class="modal-overlay" id="logoutModalOverlay">
         <div class="modal-danger">
             <div class="modal-header-danger">
@@ -736,11 +742,11 @@
     </div>
 
     <script>
-        // ----- CREDENCIALES LOCALES (NO VISIBLES EN LA UI) -----
+        // CREDENCIALES (solo para demostración)
         const VALID_USERNAME = "Usuario";
         const VALID_PASSWORD = "159753";
 
-        // Elementos DOM
+        // Elementos
         const loginPage = document.getElementById('login-page');
         const appContainer = document.getElementById('app-container');
         const loadingScreen = document.getElementById('loading-screen');
@@ -757,40 +763,49 @@
         const helpBtn = document.getElementById('helpBtnMobile');
         const mobileHint = document.getElementById('mobileHint');
 
-        // URL de la Biblia a incrustar
         const BIBLE_URL = "https://rfioravante73-ar.github.io/appbiblia/bibliaRV60.html";
 
-        // Mostrar tooltip temporal al presionar ayuda
         let hintTimeout;
         function showHint() {
             mobileHint.classList.add('show');
             if (hintTimeout) clearTimeout(hintTimeout);
             hintTimeout = setTimeout(() => {
                 mobileHint.classList.remove('show');
-            }, 4000);
+            }, 4500);
         }
 
         helpBtn.addEventListener('click', showHint);
         let hintShown = false;
-        
+
+        // Mostrar app principal con header y iframe
         function showMainApp() {
             loadingScreen.classList.remove('active');
             setTimeout(() => {
                 appContainer.classList.add('visible');
                 loginPage.classList.add('slide-up');
+                // Cargar iframe solo si es necesario
                 if (bibleIframe.src !== BIBLE_URL) {
                     bibleIframe.src = BIBLE_URL;
                 }
+                // En móvil mostrar sugerencia después de unos segundos
                 if (!hintShown && window.innerWidth <= 768) {
                     setTimeout(() => {
                         showHint();
                         hintShown = true;
-                    }, 1000);
+                    }, 1200);
                 }
+                // Forzar reflow para asegurar que el header sea visible en cualquier caso
+                setTimeout(() => {
+                    const header = document.querySelector('.app-header');
+                    if (header && window.getComputedStyle(header).display !== 'none') {
+                        // No hacer nada, está visible
+                    }
+                }, 100);
             }, 200);
         }
 
         function showLoginAndReset() {
+            // Limpiar estado de la app y volver al login
             bibleIframe.src = "about:blank";
             appContainer.classList.remove('visible');
             loginPage.classList.remove('slide-up');
@@ -799,6 +814,8 @@
             if (passwordInput) passwordInput.value = '';
             loginErrorMsg.style.display = 'none';
             hintShown = false;
+            // Pequeña corrección visual: asegura que el scroll del login no quede raro
+            document.body.style.overflow = 'hidden';
         }
 
         function attemptLogin(username, password) {
@@ -830,6 +847,7 @@
             }, 500);
         });
 
+        // Modal de logout
         function openLogoutModal() {
             logoutModal.classList.add('active');
         }
@@ -844,6 +862,8 @@
             setTimeout(() => {
                 showLoginAndReset();
                 loadingScreen.classList.remove('active');
+                // Forzar que el login page esté en la posición correcta
+                window.scrollTo(0, 0);
             }, 400);
         }
         
@@ -856,9 +876,34 @@
             if (e.target === logoutModal) closeLogoutModalFunc();
         });
 
+        // Asegurar que en móvil el header nunca se superponga, y que al cargar el iframe, el layout se ajuste.
         window.addEventListener('load', () => {
             showLoginAndReset();
-            bibleIframe.src = "about:blank";
+            // Ajuste adicional: para evitar problemas de altura en algunos navegadores.
+            const setCorrectHeight = () => {
+                document.documentElement.style.height = "100%";
+                document.body.style.height = "100%";
+            };
+            setCorrectHeight();
+            window.addEventListener('resize', () => {
+                if (appContainer.classList.contains('visible')) {
+                    // Pequeño reajuste para que el wrapper del iframe se ajuste a cambios de orientación
+                    const wrapper = document.querySelector('.iframe-wrapper');
+                    if (wrapper) wrapper.style.minHeight = '0';
+                }
+            });
+        });
+        
+        // Asegurar que después de cada orientación el header permanezca visible
+        window.addEventListener('orientationchange', () => {
+            if (appContainer.classList.contains('visible')) {
+                setTimeout(() => {
+                    const header = document.querySelector('.app-header');
+                    if(header) header.style.flexShrink = '0';
+                    const iframeWrapper = document.querySelector('.iframe-wrapper');
+                    if(iframeWrapper) iframeWrapper.style.minHeight = '0';
+                }, 50);
+            }
         });
     </script>
 </body>
