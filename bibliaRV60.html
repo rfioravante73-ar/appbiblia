@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>📖 Biblia Reina Valera 1960</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root{
+            --google-blue:#4285F4;--google-red:#EA4335;--google-yellow:#FBBC05;--google-green:#34A853;
+            --blue-dark:#1a73e8;--bg:#fff;--bg2:#f8f9fa;--bg3:#f1f3f4;
+            --t1:#202124;--t2:#5f6368;--t3:#80868b;--border:#dadce0;
+            --shadow1:0 1px 2px 0 rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);
+            --shadow2:0 1px 3px 0 rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15);
+            --shadow3:0 1px 4px 0 rgba(60,64,67,.3),0 6px 12px 4px rgba(60,64,67,.15);
+            --sidebar:360px;--header:64px;--r:12px;--rs:8px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Roboto','Google Sans',sans-serif;background:var(--bg2);color:var(--t1);overflow:hidden;height:100vh}
+
+        .header{position:fixed;top:0;left:0;right:0;height:var(--header);background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;z-index:100;box-shadow:var(--shadow1)}
+        .logo{display:flex;align-items:center;gap:10px;min-width:280px}
+        .logo .material-icons{font-size:32px;color:var(--google-blue)}
+        .logo h1{font-family:'Google Sans',sans-serif;font-size:20px;font-weight:500;background:linear-gradient(135deg,var(--google-blue),var(--google-red),var(--google-yellow),var(--google-green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .logo span.ver{font-size:11px;background:var(--google-blue);color:#fff;padding:2px 8px;border-radius:20px;font-weight:500}
+
+        .search-box{flex:1;max-width:720px;margin:0 auto;position:relative}
+        .search-bar{width:100%;height:46px;border:none;border-radius:24px;background:var(--bg3);padding:0 48px 0 52px;font-size:16px;font-family:'Roboto',sans-serif;color:var(--t1);transition:.3s;outline:none}
+        .search-bar:focus{background:var(--bg);box-shadow:var(--shadow2)}
+        .search-bar::placeholder{color:var(--t3)}
+        .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--t2);pointer-events:none}
+        
+        .actions{display:flex;align-items:center;gap:8px;min-width:220px;justify-content:flex-end}
+        .btn{border:none;background:var(--bg3);color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;transition:.2s;font-family:'Roboto',sans-serif}
+        .btn:hover{background:#e8eaed;color:var(--t1)}
+        .btn.active{background:var(--google-blue);color:#fff}
+        .font-btns{display:flex;gap:4px}
+        .font-btn{border:none;background:var(--bg3);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:.2s;font-size:14px;font-weight:700;font-family:'Google Sans',sans-serif}
+        .font-btn:hover{background:var(--google-blue);color:#fff}
+        .theme-btn{border:none;background:transparent;color:var(--t2);cursor:pointer;padding:8px;border-radius:50%;display:flex;align-items:center;transition:.2s}
+        .theme-btn:hover{background:var(--bg3)}
+
+        /* Layout */
+        .layout{display:flex;height:calc(100vh - var(--header));margin-top:var(--header)}
+
+        /* Books Sidebar */
+        .bsidebar{width:240px;background:var(--bg);border-right:1px solid var(--border);overflow-y:auto;padding:8px 0;flex-shrink:0}
+        .t-hdr{padding:12px 16px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
+        .b-item{padding:8px 16px;cursor:pointer;font-size:14px;color:var(--t2);transition:.15s;display:flex;align-items:center;gap:10px;border-left:3px solid transparent}
+        .b-item:hover{background:var(--bg3);color:var(--t1)}
+        .b-item.active{background:rgba(66,133,244,.08);color:var(--google-blue);border-left-color:var(--google-blue);font-weight:500}
+        .b-item .abbr{font-size:11px;background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--t3);min-width:32px;text-align:center}
+
+        /* Content */
+        .content{flex:1;overflow-y:auto;padding:24px 32px;scroll-behavior:smooth}
+        .ch-hdr{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+        .ch-hdr h2{font-family:'Google Sans',sans-serif;font-size:28px;font-weight:500;margin-bottom:4px}
+        .ch-nav{display:flex;gap:8px;margin-top:12px}
+        .ch-nav button{border:1px solid var(--border);background:var(--bg);padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;color:var(--google-blue);font-family:'Roboto',sans-serif;font-weight:500;transition:.2s}
+        .ch-nav button:hover{background:var(--google-blue);color:#fff;border-color:var(--google-blue)}
+
+        .ch-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+        .ch-grid button{width:36px;height:36px;border:1px solid var(--border);background:var(--bg);border-radius:50%;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);transition:.2s}
+        .ch-grid button.active{background:var(--google-blue);color:#fff;border-color:var(--google-blue)}
+
+        /* Verses */
+        .v-container{max-width:800px; padding-bottom: 40px;}
+        .verse{padding:8px 12px;margin-bottom:2px;border-radius:var(--rs);line-height:1.8;font-size:16px;cursor:pointer;transition:background .15s;position:relative}
+        .verse:hover{background:rgba(66,133,244,.04)}
+        .v-num{font-size:11px;font-weight:700;color:var(--google-blue);vertical-align:super;margin-right:4px;user-select:none}
+        .v-acts{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:none;gap:4px}
+        .verse:hover .v-acts{display:flex}
+        .v-act{border:none;background:var(--bg3);width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:.2s}
+        .v-act:hover{background:var(--google-blue);color:#fff}
+
+        /* Comentarios Sidebar */
+        .csidebar{width:var(--sidebar);background:var(--bg);border-left:1px solid var(--border);display:flex;flex-direction:column;transition:width .3s;flex-shrink:0}
+        .csidebar.hide{width:0;overflow:hidden}
+        .c-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .c-body{flex:1;overflow-y:auto;padding:16px}
+        .c-input{padding:16px;border-top:1px solid var(--border)}
+        .c-ta{width:100%;min-height:80px;border:1px solid var(--border);border-radius:var(--rs);padding:12px;font-size:14px;resize:vertical;outline:none}
+
+        /* Comments cards */
+        .com-card{background:var(--bg2);border-radius:12px;padding:12px;margin-bottom:12px;border-left:4px solid var(--google-blue);font-size:14px;word-break:break-word}
+        .com-time{font-size:10px;color:var(--t3);margin-top:6px;display:block}
+
+        /* Loader & Toast */
+        .loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:1000;justify-content:center;align-items:center;flex-direction:column;gap:16px}
+        .loader.show{display:flex}
+        .spin{width:48px;height:48px;border:4px solid var(--bg3);border-top-color:var(--google-blue);border-radius:50%;animation:sp .8s linear infinite}
+        @keyframes sp{to{transform:rotate(360deg)}}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#323232;color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:10000;transition:transform .3s}
+        .toast.show{transform:translateX(-50%) translateY(0)}
+
+        /* Dark Mode */
+        body.dark{--bg:#202124;--bg2:#1a1a1e;--bg3:#303134;--t1:#e8eaed;--t2:#9aa0a6;--t3:#5f6368;--border:#3c4043}
+
+        /* ========== RESPONSIVE MÓVIL ========== */
+        @media screen and (max-width: 680px) {
+            body { overflow-y: auto; height: auto; }
+            .header { flex-wrap: wrap; height: auto; padding: 8px 12px; row-gap: 10px; position: sticky; top: 0; z-index: 200; }
+            .logo { min-width: auto; flex: 1; }
+            .logo h1 { font-size: 18px; }
+            .actions { min-width: auto; gap: 4px; }
+            .btn { padding: 6px 12px; font-size: 12px; }
+            .search-box { order: 3; width: 100%; max-width: 100%; margin: 4px 0 2px; flex: auto; }
+            .search-bar { height: 42px; font-size: 15px; }
+
+            .layout { display: block; height: auto; margin-top: 0; }
+            .bsidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); overflow-y: visible; max-height: none; padding-bottom: 12px; }
+            .content { width: 100%; padding: 16px 14px; overflow-y: visible; height: auto; }
+            .csidebar { width: 100% !important; border-left: none; border-top: 1px solid var(--border); transition: none; }
+            .csidebar.hide { display: none; width: 100%; }
+
+            .verse { padding: 12px 10px; position: relative; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px; }
+            .v-num { vertical-align: baseline; font-size: 13px; margin-right: 6px; }
+            .v-text { flex: 1 1 100%; line-height: 1.7; }
+            .v-acts { position: static; transform: none; display: flex; margin-top: 8px; justify-content: flex-end; gap: 12px; width: 100%; }
+            .verse:hover .v-acts { display: flex; }
+            .v-act { width: 40px; height: 40px; background: var(--bg3); }
+            .v-act .material-icons { font-size: 20px; }
+
+            .ch-grid button { width: 44px; height: 44px; font-size: 14px; }
+            .ch-nav button { padding: 8px 14px; font-size: 14px; }
+            .v-container { max-width: 100%; }
+            .verse { line-height: 1.75; }
+            .b-item { padding: 12px 16px; font-size: 15px; }
+            .b-item .abbr { font-size: 12px; padding: 3px 8px; }
+            .c-hdr h3 { font-size: 18px; }
+            .c-ta { font-size: 15px; }
+            .com-card { padding: 14px; }
+        }
+
+        @media screen and (max-width: 480px) {
+            .content { padding: 12px; }
+            .verse { font-size: 15px; }
+            .ch-hdr h2 { font-size: 22px; }
+            .btn span.material-icons { font-size: 18px; }
+            .font-btn { width: 36px; height: 36px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="loader" id="loader"><div class="spin"></div><div class="ltxt" id="ltxt">Cargando...</div></div>
+<div class="toast" id="toast"></div>
+
+<header class="header">
+    <div class="logo"><span class="material-icons">menu_book</span><h1>Biblia Digital</h1><span class="ver">RV1960</span></div>
+    <div class="search-box">
+        <span class="material-icons search-icon">search</span>
+        <input type="text" class="search-bar" id="searchInput" placeholder="Busca libro, pasaje (Juan 3:16) o frase..." autocomplete="off">
+    </div>
+    <div class="actions">
+        <div class="font-btns">
+            <button class="font-btn" id="fDec">A-</button>
+            <button class="font-btn" id="fInc">A+</button>
+        </div>
+        <button class="theme-btn" id="themeBtn"><span class="material-icons">dark_mode</span></button>
+        <button class="btn" id="cToggle"><span class="material-icons">comment</span>Comentarios</button>
+    </div>
+</header>
+
+<div class="layout">
+    <aside class="bsidebar" id="bSidebar">
+        <div class="t-hdr">Antiguo Testamento</div>
+        <div id="otBooks"></div>
+        <div class="t-hdr" style="margin-top:8px">Nuevo Testamento</div>
+        <div id="ntBooks"></div>
+    </aside>
+
+    <main class="content" id="content">
+        <div id="mainView">
+            <div class="welcome" id="welcome">
+                <div style="text-align:center; padding-top: 100px;">
+                    <span class="material-icons" style="font-size:80px; color:var(--google-blue)">menu_book</span>
+                    <h2>Bienvenido</h2>
+                    <p>Selecciona un libro para comenzar la lectura.</p>
+                </div>
+            </div>
+            
+            <div id="searchResults" style="display:none; padding-bottom: 40px;"></div>
+            
+            <div id="chContent" style="display:none">
+                <div id="chHeader"></div>
+                <div id="vCont" class="v-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="csidebar hide" id="cSidebar">
+        <div class="c-hdr"><h3>📝 Mis notas</h3><button class="btn" id="closeCommentsBtn" style="padding:4px 8px; min-width:auto">✕</button></div>
+        <div class="c-body" id="cBody"><div style="color:var(--t3); text-align:center; padding:20px">Selecciona un versículo para añadir notas</div></div>
+        <div class="c-input">
+            <div id="curRef" style="font-size:12px; color:var(--google-blue); margin-bottom:8px"></div>
+            <textarea class="c-ta" id="cTa" placeholder="Escribe tu comentario, reflexión o nota..."></textarea>
+            <button class="btn" id="cAdd" style="width:100%; margin-top:8px; justify-content:center">💾 Guardar nota</button>
+        </div>
+    </aside>
+</div>
+
+<script>
+const BOOKS = [
+    {name:"Génesis",abbr:"Gn",ch:50,t:"OT"},{name:"Éxodo",abbr:"Ex",ch:40,t:"OT"},{name:"Levítico",abbr:"Lv",ch:27,t:"OT"},{name:"Números",abbr:"Nm",ch:36,t:"OT"},{name:"Deuteronomio",abbr:"Dt",ch:34,t:"OT"},{name:"Josué",abbr:"Jos",ch:24,t:"OT"},{name:"Jueces",abbr:"Jue",ch:21,t:"OT"},{name:"Rut",abbr:"Rt",ch:4,t:"OT"},{name:"1 Samuel",abbr:"1S",ch:31,t:"OT"},{name:"2 Samuel",abbr:"2S",ch:24,t:"OT"},{name:"1 Reyes",abbr:"1R",ch:22,t:"OT"},{name:"2 Reyes",abbr:"2R",ch:25,t:"OT"},{name:"1 Crónicas",abbr:"1Cr",ch:29,t:"OT"},{name:"2 Crónicas",abbr:"2Cr",ch:36,t:"OT"},{name:"Esdras",abbr:"Esd",ch:10,t:"OT"},{name:"Nehemías",abbr:"Neh",ch:13,t:"OT"},{name:"Ester",abbr:"Est",ch:10,t:"OT"},{name:"Job",abbr:"Job",ch:42,t:"OT"},{name:"Salmos",abbr:"Sal",ch:150,t:"OT"},{name:"Proverbios",abbr:"Pr",ch:31,t:"OT"},{name:"Eclesiastés",abbr:"Ec",ch:12,t:"OT"},{name:"Cantares",abbr:"Cnt",ch:8,t:"OT"},{name:"Isaías",abbr:"Is",ch:66,t:"OT"},{name:"Jeremías",abbr:"Jer",ch:52,t:"OT"},{name:"Lamentaciones",abbr:"Lm",ch:5,t:"OT"},{name:"Ezequiel",abbr:"Ez",ch:48,t:"OT"},{name:"Daniel",abbr:"Dn",ch:12,t:"OT"},{name:"Oseas",abbr:"Os",ch:14,t:"OT"},{name:"Joel",abbr:"Jl",ch:3,t:"OT"},{name:"Amós",abbr:"Am",ch:9,t:"OT"},{name:"Abdías",abbr:"Abd",ch:1,t:"OT"},{name:"Jonás",abbr:"Jon",ch:4,t:"OT"},{name:"Miqueas",abbr:"Mi",ch:7,t:"OT"},{name:"Nahúm",abbr:"Nah",ch:3,t:"OT"},{name:"Habacuc",abbr:"Hab",ch:3,t:"OT"},{name:"Sofonías",abbr:"Sof",ch:3,t:"OT"},{name:"Hageo",abbr:"Hag",ch:2,t:"OT"},{name:"Zacarías",abbr:"Zac",ch:14,t:"OT"},{name:"Malaquías",abbr:"Mal",ch:4,t:"OT"},{name:"Mateo",abbr:"Mt",ch:28,t:"NT"},{name:"Marcos",abbr:"Mr",ch:16,t:"NT"},{name:"Lucas",abbr:"Lc",ch:24,t:"NT"},{name:"Juan",abbr:"Jn",ch:21,t:"NT"},{name:"Hechos",abbr:"Hch",ch:28,t:"NT"},{name:"Romanos",abbr:"Ro",ch:16,t:"NT"},{name:"1 Corintios",abbr:"1Co",ch:16,t:"NT"},{name:"2 Corintios",abbr:"2Co",ch:13,t:"NT"},{name:"Gálatas",abbr:"Gal",ch:6,t:"NT"},{name:"Efesios",abbr:"Ef",ch:6,t:"NT"},{name:"Filipenses",abbr:"Fil",ch:4,t:"NT"},{name:"Colosenses",abbr:"Col",ch:4,t:"NT"},{name:"1 Tesalonicenses",abbr:"1Ts",ch:5,t:"NT"},{name:"2 Tesalonicenses",abbr:"2Ts",ch:3,t:"NT"},{name:"1 Timoteo",abbr:"1Ti",ch:6,t:"NT"},{name:"2 Timoteo",abbr:"2Ti",ch:4,t:"NT"},{name:"Tito",abbr:"Tit",ch:3,t:"NT"},{name:"Filemón",abbr:"Flm",ch:1,t:"NT"},{name:"Hebreos",abbr:"Heb",ch:13,t:"NT"},{name:"Santiago",abbr:"Stg",ch:5,t:"NT"},{name:"1 Pedro",abbr:"1P",ch:5,t:"NT"},{name:"2 Pedro",abbr:"2P",ch:3,t:"NT"},{name:"1 Juan",abbr:"1Jn",ch:5,t:"NT"},{name:"2 Juan",abbr:"2Jn",ch:1,t:"NT"},{name:"3 Juan",abbr:"3Jn",ch:1,t:"NT"},{name:"Judas",abbr:"Jud",ch:1,t:"NT"},{name:"Apocalipsis",abbr:"Ap",ch:22,t:"NT"}
+];
+
+const state = {
+    curBook: null, curCh: null,
+    fontSize: 16,
+    comments: JSON.parse(localStorage.getItem('bc_comments') || '{}'),
+    dark: localStorage.getItem('bd') === 'true',
+    cache: {}
+};
+
+async function loadChapter(bookIdx, chapter) {
+    const cacheKey = `${bookIdx}-${chapter}`;
+    if (state.cache[cacheKey]) return state.cache[cacheKey];
+    try {
+        const res = await fetch(`https://bolls.life/get-chapter/RV1960/${bookIdx + 1}/${chapter}/`);
+        const data = await res.json();
+        const formatted = { verses: data.map(v => ({ verse: v.verse, text: v.text.replace(/<[^>]+>/g, '') })) };
+        state.cache[cacheKey] = formatted;
+        return formatted;
+    } catch (err) { return null; }
+}
+
+function renderBooks() {
+    const ot = document.getElementById('otBooks'), nt = document.getElementById('ntBooks');
+    ot.innerHTML = ''; nt.innerHTML = '';
+    BOOKS.forEach((b, i) => {
+        const d = document.createElement('div');
+        d.className = 'b-item'; d.innerHTML = `<span class="abbr">${b.abbr}</span><span>${b.name}</span>`;
+        d.onclick = () => selectBook(i);
+        (b.t === 'OT' ? ot : nt).appendChild(d);
+    });
+}
+
+function selectBook(idx) {
+    state.curBook = idx;
+    document.getElementById('welcome').style.display = 'none';
+    if(document.getElementById('searchResults')) document.getElementById('searchResults').style.display = 'none';
+    document.getElementById('chContent').style.display = 'block';
+    const b = BOOKS[idx];
+    let h = `<div class="ch-hdr"><h2>${b.name}</h2><div class="ch-grid">`;
+    for (let i = 1; i <= b.ch; i++) h += `<button onclick="goChapter(${idx}, ${i})">${i}</button>`;
+    h += '</div></div>';
+    document.getElementById('chHeader').innerHTML = h;
+    document.getElementById('vCont').innerHTML = '';
+    state.curCh = null;
+}
+
+async function goChapter(idx, ch) {
+    state.curCh = ch;
+    const loader = document.getElementById('loader');
+    loader.classList.add('show');
+    const data = await loadChapter(idx, ch);
+    loader.classList.remove('show');
+    if (data) renderVerses(data, idx, ch);
+    else showMsg("Error al cargar capítulo");
+}
+
+function renderVerses(data, idx, ch) {
+    const b = BOOKS[idx];
+    const cont = document.getElementById('vCont');
+    let h = `<div class="ch-hdr" style="margin-top:20px">
+                <h3>${b.name} ${ch}</h3>
+                <div class="ch-nav">`;
+    if (ch > 1) h += `<button onclick="goChapter(${idx}, ${ch-1})">← Capítulo ${ch-1}</button>`;
+    if (ch < b.ch) h += `<button onclick="goChapter(${idx}, ${ch+1})">Capítulo ${ch+1} →</button>`;
+    h += `</div></div>`;
+
+    data.verses.forEach(v => {
+        const ref = `${b.name} ${ch}:${v.verse}`;
+        const cleanText = v.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        h += `<div class="verse" id="v-${v.verse}">
+            <span class="v-num">${v.verse}</span>
+            <span class="v-text" style="font-size:${state.fontSize}px">${v.text}</span>
+            <div class="v-acts">
+                <button class="v-act" onclick="copyV('${ref}', '${cleanText.replace(/\n/g,' ')}')" title="Copiar"><span class="material-icons" style="font-size:16px">content_copy</span></button>
+                <button class="v-act" onclick="selVerse('${ref}')" title="Comentar"><span class="material-icons" style="font-size:16px">comment</span></button>
+            </div>
+        </div>`;
+    });
+    cont.innerHTML = h;
+    document.getElementById('content').scrollTop = 0;
+    if (window.innerWidth <= 680) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyV(ref, text) {
+    const fullText = `${ref} - ${text}`;
+    navigator.clipboard.writeText(fullText).then(() => showMsg(`✔ Copiado: ${ref}`));
+}
+
+let currentCommentRef = "";
+
+function selVerse(ref) {
+    currentCommentRef = ref;
+    document.getElementById('curRef').textContent = ref;
+    const sidebar = document.getElementById('cSidebar');
+    sidebar.classList.remove('hide');
+    renderCommentsForRef(ref);
+    document.getElementById('cTa').focus();
+    if (window.innerWidth <= 680) setTimeout(() => sidebar.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function renderCommentsForRef(ref) {
+    const container = document.getElementById('cBody');
+    const commentsList = state.comments[ref] || [];
+    if (!commentsList.length) {
+        container.innerHTML = `<div style="color:var(--t3); text-align:center; padding:20px">💬 Sin notas para este versículo. Escribe tu reflexión.</div>`;
+        return;
+    }
+    let html = '';
+    commentsList.forEach((note, idx) => {
+        const timeStr = note.timestamp ? new Date(note.timestamp).toLocaleString() : 'Nota guardada';
+        html += `<div class="com-card">
+                    <div>📌 ${escapeHtml(note.text)}</div>
+                    <small class="com-time">${timeStr}</small>
+                    <div style="display:flex; justify-content:flex-end; margin-top:6px">
+                        <button class="v-act" onclick="deleteComment('${ref.replace(/'/g, "\\'")}', ${idx})" style="width:28px;height:28px;background:var(--bg3);border:none;border-radius:50%;cursor:pointer">🗑️</button>
+                    </div>
+                 </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+function deleteComment(ref, idx) {
+    if(state.comments[ref] && state.comments[ref][idx]){
+        state.comments[ref].splice(idx,1);
+        if(state.comments[ref].length===0) delete state.comments[ref];
+        localStorage.setItem('bc_comments', JSON.stringify(state.comments));
+        renderCommentsForRef(ref);
+        showMsg("Nota eliminada");
+    }
+}
+
+function addCurrentComment() {
+    const ref = currentCommentRef;
+    if (!ref) { showMsg("Selecciona un versículo primero"); return; }
+    const textarea = document.getElementById('cTa');
+    const commentText = textarea.value.trim();
+    if (!commentText) { showMsg("Escribe un comentario antes de guardar"); return; }
+    if (!state.comments[ref]) state.comments[ref] = [];
+    state.comments[ref].push({ text: commentText, timestamp: Date.now() });
+    localStorage.setItem('bc_comments', JSON.stringify(state.comments));
+    textarea.value = '';
+    renderCommentsForRef(ref);
+    showMsg("Nota guardada ✨");
+}
+
+function showMsg(m) {
+    const t = document.getElementById('toast');
+    t.textContent = m; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function toggleTheme() {
+    state.dark = !state.dark;
+    document.body.classList.toggle('dark', state.dark);
+    localStorage.setItem('bd', state.dark);
+}
+
+function adjustFontSize(delta) {
+    state.fontSize = Math.min(28, Math.max(14, state.fontSize + delta));
+    document.querySelectorAll('.v-text').forEach(e => e.style.fontSize = state.fontSize + 'px');
+}
+
+// Búsqueda Inteligente (Referencia, Libro o Texto)
+function setupSearch() {
+    const input = document.getElementById('searchInput');
+    input.addEventListener('keypress', async (e) => {
+        if(e.key === 'Enter') {
+            const query = input.value.trim();
+            if(!query) return;
+
+            // 1. Es una referencia exacta con versículo? (Ej: Juan 3:16 o 1 Juan 3:16)
+            const matchVerse = query.match(/^([\d]*\s*[a-zA-ZáéíóúüñÑ\s]+?)\s+(\d+):(\d+)$/i);
+            if(matchVerse){
+                const bookQuery = matchVerse[1].toLowerCase().trim();
+                const chapter = parseInt(matchVerse[2]);
+                const verse = parseInt(matchVerse[3]);
+                const bookIndex = BOOKS.findIndex(b => b.name.toLowerCase() === bookQuery || b.abbr.toLowerCase() === bookQuery);
+                if(bookIndex !== -1 && chapter >=1 && chapter <= BOOKS[bookIndex].ch){
+                    goToSearchResult(bookIndex, chapter, verse);
+                    return;
+                }
+            }
+
+            // 2. Es una referencia solo con capítulo? (Ej: Mateo 5)
+            const matchCh = query.match(/^([\d]*\s*[a-zA-ZáéíóúüñÑ\s]+?)\s+(\d+)$/i);
+            if(matchCh){
+                const bookQuery = matchCh[1].toLowerCase().trim();
+                const chapter = parseInt(matchCh[2]);
+                const bookIndex = BOOKS.findIndex(b => b.name.toLowerCase() === bookQuery || b.abbr.toLowerCase() === bookQuery);
+                if(bookIndex !== -1 && chapter >=1 && chapter <= BOOKS[bookIndex].ch){
+                    selectBook(bookIndex);
+                    setTimeout(() => goChapter(bookIndex, chapter), 50);
+                    return;
+                }
+            }
+
+            // 3. Es solo un libro? (Ej: Génesis o Gn)
+            const exactBookIdx = BOOKS.findIndex(b => b.name.toLowerCase() === query.toLowerCase() || b.abbr.toLowerCase() === query.toLowerCase());
+            if (exactBookIdx !== -1) {
+                selectBook(exactBookIdx);
+                return;
+            }
+
+            // 4. Búsqueda de texto completo en la Biblia usando API
+            const loader = document.getElementById('loader');
+            document.getElementById('ltxt').textContent = "Buscando en la Biblia...";
+            loader.classList.add('show');
+            try {
+                const res = await fetch(`https://bolls.life/search/RV1960/?search=${encodeURIComponent(query)}`);
+                if(res.ok) {
+                    const results = await res.json();
+                    renderSearchResults(query, results);
+                } else {
+                    showMsg("Sin resultados o error en servidor");
+                }
+            } catch (err) {
+                showMsg("Error al conectar con la búsqueda");
+            }
+            loader.classList.remove('show');
+            document.getElementById('ltxt').textContent = "Cargando..."; 
+            input.blur(); 
+        }
+    });
+}
+
+function renderSearchResults(query, results) {
+    document.getElementById('welcome').style.display = 'none';
+    document.getElementById('chContent').style.display = 'none';
+    const resView = document.getElementById('searchResults');
+    resView.style.display = 'block';
+
+    if (!results || !Array.isArray(results) || results.length === 0) {
+        resView.innerHTML = `<div class="ch-hdr"><h2>Resultados para "${query}"</h2><p style="color:var(--t2); margin-top:10px;">No se encontraron resultados en el texto bíblico.</p></div>`;
+        return;
+    }
+
+    const limit = Math.min(results.length, 200);
+    const limitedResults = results.slice(0, limit);
+    const extraMsg = results.length > 200 ? ` <span style="font-size:14px; color:var(--t3)">(Mostrando primeros 200)</span>` : '';
+
+    let h = `<div class="ch-hdr"><h2>Resultados para "${query}" (${results.length})${extraMsg}</h2></div><div class="v-container">`;
+
+    limitedResults.forEach(r => {
+        const bookIdx = r.book - 1;
+        const b = BOOKS[bookIdx];
+        if(!b) return;
+        const text = r.text ? r.text.replace(/<[^>]+>/g, '') : '';
+        h += `<div class="verse" onclick="goToSearchResult(${bookIdx}, ${r.chapter}, ${r.verse})">
+            <span class="v-num" style="color:var(--google-green); margin-right:8px; font-size:13px;">${b.name} ${r.chapter}:${r.verse}</span>
+            <span class="v-text" style="font-size:${state.fontSize}px">${text}</span>
+        </div>`;
+    });
+    h += `</div>`;
+    resView.innerHTML = h;
+    document.getElementById('content').scrollTop = 0;
+    if (window.innerWidth <= 680) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToSearchResult(bookIdx, ch, v) {
+    selectBook(bookIdx);
+    setTimeout(() => goChapter(bookIdx, ch).then(() => {
+        setTimeout(() => {
+            const el = document.getElementById(`v-${v}`);
+            if(el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.style.backgroundColor = 'rgba(66,133,244,0.15)';
+                setTimeout(() => el.style.backgroundColor = '', 2000);
+            } else {
+                showMsg(`Versículo ${ch}:${v} no encontrado`);
+            }
+        }, 150);
+    }), 50);
+}
+
+// Inicialización y eventos
+function init() {
+    renderBooks();
+    if(state.dark) document.body.classList.add('dark');
+    document.getElementById('themeBtn').onclick = toggleTheme;
+    document.getElementById('fInc').onclick = () => adjustFontSize(2);
+    document.getElementById('fDec').onclick = () => adjustFontSize(-2);
+    const cToggle = document.getElementById('cToggle');
+    const closeComments = document.getElementById('closeCommentsBtn');
+    cToggle.onclick = () => document.getElementById('cSidebar').classList.toggle('hide');
+    closeComments.onclick = () => document.getElementById('cSidebar').classList.add('hide');
+    document.getElementById('cAdd').onclick = addCurrentComment;
+    setupSearch();
+    const storedFont = localStorage.getItem('bible_font_size');
+    if(storedFont) state.fontSize = parseInt(storedFont);
+    window.addEventListener('beforeunload', () => localStorage.setItem('bible_font_size', state.fontSize));
+}
+
+init();
+window.goChapter = goChapter;
+window.selectBook = selectBook;
+window.copyV = copyV;
+window.selVerse = selVerse;
+window.deleteComment = deleteComment;
+window.goToSearchResult = goToSearchResult;
+</script>
+</body>
+</html>
