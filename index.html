@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>La Biblia Versión Reina Valera | Visor de Escrituras</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,7 +97,6 @@
             border-radius: 12px;
         }
 
-        /* Título responsivo y justificado (sin mayúsculas sostenidas) */
         .login-brand h1 {
             font-family: var(--font-heading);
             font-size: clamp(1.6rem, 6vw, 2.8rem);
@@ -278,7 +277,6 @@
             gap: 1rem;
         }
 
-        /* Título principal responsivo y justificado */
         .logo-area h1 {
             font-family: var(--font-heading);
             font-size: clamp(1.2rem, 5vw, 2rem);
@@ -448,28 +446,99 @@
             transform: scale(1.02);
         }
 
-        /* RESPONSIVE: ajustes adicionales */
-        @media (max-width: 700px) {
-            .login-left {
-                display: none;
-            }
-            .login-right {
-                flex: 1;
-                padding: 1rem;
-            }
+        /* ===== RESPONSIVE MEJORADO PARA MÓVIL (sin alterar escritorio) ===== */
+        @media (max-width: 768px) {
+            /* Ajustes generales de espaciado en login */
             .login-box {
-                padding: 2rem;
+                padding: 1.8rem;
+                margin: 1rem;
+                max-width: 90%;
+            }
+            .login-box h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .form-control {
+                padding: 0.8rem 0.9rem;
+                font-size: 0.95rem;
+            }
+            .login-btn {
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+            /* Ajuste de la imagen del login para que no se desborde */
+            .login-image {
+                max-width: 180px;
+                margin-bottom: 1rem;
+            }
+            .login-brand h1 {
+                font-size: clamp(1.4rem, 5vw, 2rem);
+            }
+            .login-brand p {
+                font-size: 0.85rem;
+            }
+            /* Header responsivo más compacto */
+            .app-header {
+                padding: 0.6rem 1rem;
             }
             .header-inner {
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                gap: 0.6rem;
             }
             .logo-area h1 {
+                font-size: 1.3rem;
                 text-align: center;
             }
-            .header-actions {
-                justify-content: center;
+            .logout-btn-header {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            /* Asegurar que el iframe use todo el espacio vertical disponible */
+            .iframe-wrapper {
+                min-height: 0;
+                flex: 1;
+            }
+            /* Modal ajustado para móviles */
+            .modal-danger {
+                width: 85%;
+                max-width: 340px;
+            }
+            .modal-header-danger {
+                padding: 1rem 1.2rem;
+            }
+            .modal-body-danger {
+                padding: 1.5rem;
+            }
+            .danger-text {
+                font-size: 1rem;
+            }
+            .danger-actions {
+                gap: 0.8rem;
+            }
+            .btn-cancel, .btn-danger {
+                padding: 0.6rem 1.2rem;
+            }
+        }
+
+        /* Para pantallas muy pequeñas (menos de 480px) refinamos aún más */
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 1.5rem;
+            }
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            .login-brand h1 {
+                font-size: 1.4rem;
+            }
+            .logo-area h1 {
+                font-size: 1.1rem;
+            }
+            .logout-btn-header {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.9rem;
             }
         }
     </style>
@@ -492,21 +561,21 @@
                 <h2>Acceso al Visor</h2>
                 <form id="loginForm">
                     <div class="form-group">
-                        <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
-                        <input type="email" id="email" class="form-control" placeholder="tu@email.com" required>
+                        <label><i class="fas fa-user"></i> Usuario</label>
+                        <input type="text" id="username" class="form-control" placeholder="Ingresa tu usuario" required autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-lock"></i> Contraseña</label>
                         <input type="password" id="password" class="form-control" placeholder="••••••" required>
                     </div>
                     <button type="submit" class="login-btn"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
-                    <p class="error-msg" id="loginError"><i class="fas fa-exclamation-circle"></i> Credenciales inválidas. Verifica tus datos.</p>
+                    <p class="error-msg" id="loginError"><i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.</p>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- LOADING SIMULADO (carga de sesión) -->
+    <!-- LOADING SIMULADO -->
     <div id="loading-screen">
         <div class="loader-icon"><i class="fas fa-hourglass-half"></i></div>
         <h3 style="color: var(--gold-soft);">Cargando Escrituras...</h3>
@@ -548,31 +617,17 @@
         </div>
     </div>
 
-    <!-- FIREBASE MODULAR (solo autenticación) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        // Configuración de Firebase (solo auth, se mantiene la misma)
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHqsfPRfqMIr9nCIyW5zGYEvkxD44g5Cs",
-            authDomain: "cronologia-biblia.firebaseapp.com",
-            projectId: "cronologia-biblia",
-            storageBucket: "cronologia-biblia.firebasestorage.app",
-            messagingSenderId: "736235804664",
-            appId: "1:736235804664:web:9bd325b51b43d050a2e80d"
-        };
-
-        // Inicializar app y auth
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    <script>
+        // ----- CREDENCIALES LOCALES (NO VISIBLES EN LA UI) -----
+        const VALID_USERNAME = "Usuario";
+        const VALID_PASSWORD = "159753";
 
         // Elementos DOM
         const loginPage = document.getElementById('login-page');
         const appContainer = document.getElementById('app-container');
         const loadingScreen = document.getElementById('loading-screen');
         const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
+        const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
         const loginErrorMsg = document.getElementById('loginError');
         const logoutMainBtn = document.getElementById('logoutMainBtn');
@@ -585,64 +640,69 @@
         // URL de la Biblia a incrustar
         const BIBLE_URL = "https://rfioravante73-ar.github.io/appbiblia/bibliaRV60.html";
 
-        // Helper: ocultar loading y mostrar app container
+        // Variable para mantener estado de sesión (opcional)
+        let isLoggedIn = false;
+
+        // Helper: mostrar app principal
         function showMainApp() {
-            loadingScreen.classList.remove('active'); // apagar loading
+            loadingScreen.classList.remove('active');
             setTimeout(() => {
                 appContainer.classList.add('visible');
-                loginPage.classList.add('slide-up'); // esconder login
-                // Cargar iframe solo cuando se muestra la app
+                loginPage.classList.add('slide-up');
                 if (bibleIframe.src !== BIBLE_URL) {
                     bibleIframe.src = BIBLE_URL;
                 }
+                isLoggedIn = true;
             }, 200);
         }
 
+        // Regresar al login y reiniciar estado
         function showLoginAndReset() {
             // Limpiar iframe
             bibleIframe.src = "about:blank";
-            // Ocultar app container, mostrar login sin slide-up
             appContainer.classList.remove('visible');
             loginPage.classList.remove('slide-up');
-            // Resetear loading por si acaso
             loadingScreen.classList.remove('active');
-            // Limpiar campos de login (opcional)
-            emailInput.value = '';
-            passwordInput.value = '';
+            // Limpiar campos del formulario
+            if (usernameInput) usernameInput.value = '';
+            if (passwordInput) passwordInput.value = '';
             loginErrorMsg.style.display = 'none';
+            isLoggedIn = false;
         }
 
-        // Iniciar sesión
-        loginForm.addEventListener('submit', async (e) => {
+        // Validar credenciales localmente
+        function attemptLogin(username, password) {
+            return (username === VALID_USERNAME && password === VALID_PASSWORD);
+        }
+
+        // Evento de envío del login
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = emailInput.value.trim();
+            const username = usernameInput.value.trim();
             const password = passwordInput.value;
-            
-            if (!email || !password) {
+
+            if (!username || !password) {
                 loginErrorMsg.style.display = 'block';
-                loginErrorMsg.textContent = 'Por favor ingresa correo y contraseña.';
+                loginErrorMsg.textContent = 'Por favor ingresa usuario y contraseña.';
                 return;
             }
 
-            // Mostrar loading mientras autentica
             loadingScreen.classList.add('active');
             loginErrorMsg.style.display = 'none';
-            
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // El onAuthStateChanged manejará la transición exitosa
-            } catch (error) {
-                loadingScreen.classList.remove('active');
-                let errorText = 'Credenciales incorrectas.';
-                if (error.code === 'auth/user-not-found') errorText = 'Usuario no registrado.';
-                if (error.code === 'auth/wrong-password') errorText = 'Contraseña incorrecta.';
-                loginErrorMsg.textContent = errorText;
-                loginErrorMsg.style.display = 'block';
-                console.error(error);
-            }
+
+            // Pequeña demora para simular carga
+            setTimeout(() => {
+                if (attemptLogin(username, password)) {
+                    showMainApp();
+                } else {
+                    loadingScreen.classList.remove('active');
+                    loginErrorMsg.style.display = 'block';
+                    loginErrorMsg.textContent = 'Usuario o contraseña incorrectos.';
+                }
+            }, 500);
         });
 
-        // Cerrar sesión (desde botón header)
+        // Cerrar sesión: modal y acción
         function openLogoutModal() {
             logoutModal.classList.add('active');
         }
@@ -651,16 +711,13 @@
             logoutModal.classList.remove('active');
         }
         
-        async function performLogout() {
+        function performLogout() {
             closeLogoutModalFunc();
             loadingScreen.classList.add('active');
-            try {
-                await signOut(auth);
-                // Al cerrar sesión, el observador restaurará la vista de login
-            } catch (err) {
-                console.error("Error al cerrar sesión", err);
+            setTimeout(() => {
+                showLoginAndReset();
                 loadingScreen.classList.remove('active');
-            }
+            }, 400);
         }
         
         logoutMainBtn.addEventListener('click', openLogoutModal);
@@ -668,34 +725,15 @@
         cancelLogout.addEventListener('click', closeLogoutModalFunc);
         confirmLogout.addEventListener('click', performLogout);
         
-        // Cerrar modal si se hace clic en overlay (opcional)
+        // Cerrar modal si se hace clic en el overlay
         logoutModal.addEventListener('click', (e) => {
             if (e.target === logoutModal) closeLogoutModalFunc();
         });
 
-        // Estado de autenticación principal
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Usuario autenticado: mostrar app con iframe
-                loadingScreen.classList.add('active');
-                // Pequeño retardo para dar sensación de carga suave
-                setTimeout(() => {
-                    showMainApp();
-                }, 600);
-            } else {
-                // No autenticado: mostrar pantalla de login
-                showLoginAndReset();
-                loadingScreen.classList.remove('active');
-            }
-        });
-
-        // Prevenir carga incorrecta del iframe si no hay sesión activa
+        // Al cargar la página, garantizar estado inicial sin sesión
         window.addEventListener('load', () => {
+            showLoginAndReset();
             bibleIframe.src = "about:blank";
-        });
-
-        bibleIframe.addEventListener('error', () => {
-            console.warn('Error al cargar el recurso bíblico');
         });
     </script>
 </body>
